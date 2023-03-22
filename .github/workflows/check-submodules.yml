@@ -1,0 +1,28 @@
+name: check-submodules
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+      - converted_to_draft
+    paths:
+      - '**'
+
+jobs:
+  check-submodules-on-main:
+    if: '! github.event.pull_request.draft'
+
+    runs-on: 	ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      with:
+        submodules: 'true'
+        token: ${{ secrets.SUBMODULE_ACCESS }}
+
+    - name: Check submodules
+      run: ./scripts/check-submodule main
