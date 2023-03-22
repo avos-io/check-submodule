@@ -15,7 +15,7 @@ jobs:
   check-submodules-on-main:
     if: '! github.event.pull_request.draft'
 
-    runs-on: 	ubuntu-latest
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout repository
