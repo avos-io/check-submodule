@@ -1,0 +1,28 @@
+name: 'check submodules'
+description: 'Check all submodules are on the correct branch'
+inputs:
+  token:
+    description: 'The access token to interact with GitHub'
+    required: true
+  branch:
+    description: 'The branch submodules should be on'
+    required: true
+    default: 'main'
+  commit:
+    description: 'The commit id to check'
+    required: true
+  repo:
+    description: 'The repo we\'re running in'
+    required: true
+  pr-number:
+    description: 'The pull request id we\'re checking'
+    required: true
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.token }}
+    - ${{ inputs.branch }}
+    - ${{ inputs.commit }}
+    - ${{ inputs.repo }}
+    - ${{ inputs.pr-number }}
