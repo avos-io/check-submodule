@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Not Ok
+      - name: Still Ok
         run: |
-          echo "Not Ok"
-          exit 1
+          echo "Still Ok"
+          exit 0
