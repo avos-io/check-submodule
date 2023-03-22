@@ -1,0 +1,10 @@
+#!/bin/bash
+
+if [ $# -lt 1 ]; then
+    echo "Usage: $0 parent_branch"
+    exit 2
+fi
+
+parent="$1"
+
+git submodule foreach --recursive "git merge-base --is-ancestor HEAD $parent"
