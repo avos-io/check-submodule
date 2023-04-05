@@ -3,10 +3,6 @@
 self=$( realpath $0 )
 dir=$( dirname $self )
 
-token="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"
-comment="$( printf "Check that your submodule is up-to-date.<br /><br />By the way, did you know that %s" "$( $dir/random-dolphin-fact )" )"
-user="jonavos"
-
 function echoerr { echo "$@" 1>&2; }
 
 function on_main {
@@ -18,12 +14,23 @@ function on_main {
     fi
 }
 
+function get_user {
+    json=$( curl -s -L \
+        -H "Accept: application/vnd.github+json" \
+        -H "Authorization: Bearer $token" \
+        -H "X-GitHub-Api-Version: 2022-11-28" \
+        https://api.github.com/user )
+    echo $( echo $json | jq '.login' )
+}
+
 function have_comment {
     all_comments=$( curl -s -L \
         -H "Accept: application/vnd.github+json" \
         -H "Authorization: Bearer $token" \
         -H "X-GitHub-Api-Version: 2022-11-28" \
         https://api.github.com/repos/$repo/pulls/$pr_number/comments )
+
+    user=$( get_user )
 
     sm_comment=$( echo $all_comments | jq "$( printf '[.[] | select(.path=="%s" and .user.login=="%s")] | length' $sm_path $user )" )
 
@@ -35,7 +42,9 @@ function have_comment {
 }
 
 function post_comment {
-    comment=$( printf '{"body":"%s","commit_id":"%s","path":"%s","line":1}' "$comment" "$parent_commit" "$sm_path" )
+    comment="$( printf "Check that your submodule is up-to-date.<br /><br />By the way, did you know that %s" "$( $dir/random-dolphin-fact )" )"
+
+    json=$( printf '{"body":"%s","commit_id":"%s","path":"%s","line":1}' "$comment" "$parent_commit" "$sm_path" )
 
     echoerr "Posting comment"
 
@@ -45,7 +54,7 @@ function post_comment {
         -H "Authorization: Bearer $token" \
         -H "X-GitHub-Api-Version: 2022-11-28" \
         https://api.github.com/repos/$repo/pulls/$pr_number/comments \
-        -d "$comment"
+        -d "$json"
 }
 
 function child {
@@ -67,14 +76,15 @@ if [ $1 == "--child" ]; then
     exit $?
 fi
 
-if [ $# -lt 4 ]; then
-    echo "Usage: $0 parent_branch commit_id repo pr_number"
+if [ $# -lt 5 ]; then
+    echo "Usage: $0 token parent_branch commit_id repo pr_number"
     exit 2
 fi
 
-export parent="$1"
-export parent_commit="$2"
-export repo="$3"
-export pr_number="$4"
+export token="$1"
+export parent="$2"
+export parent_commit="$3"
+export repo="$4"
+export pr_number="$5"
 
 git submodule foreach "$self --child"
