@@ -88,6 +88,8 @@ if [ $# -lt 5 ]; then
     exit 2
 fi
 
+git config --global --add safe.directory '*'
+
 export token="$1"
 export parent="$2"
 export parent_commit="$3"
