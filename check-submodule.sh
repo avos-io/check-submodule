@@ -71,13 +71,20 @@ function child {
     fi
 }
 
+usage="Usage: $0 token parent_branch commit_id repo pr_number"
+
+if [ $# -lt 1 ]; then
+    echo "$usage"
+    exit 3
+fi
+
 if [ $1 == "--child" ]; then
     child
     exit $?
 fi
 
 if [ $# -lt 5 ]; then
-    echo "Usage: $0 token parent_branch commit_id repo pr_number"
+    echo "$usage"
     exit 2
 fi
 
