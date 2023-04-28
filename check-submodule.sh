@@ -42,7 +42,7 @@ function have_comment {
 }
 
 function post_comment {
-    comment="$( printf "Check that your submodule is up-to-date.<br /><br />By the way, did you know that %s" "$( $dir/random-dolphin-fact )" )"
+    comment="$( printf "Check that your submodule is up-to-date.<br /><br />By the way, did you know that %s" "$( ${dir}random-dolphin-fact.sh )" )"
 
     json=$( printf '{"body":"%s","commit_id":"%s","path":"%s","line":1}' "$comment" "$parent_commit" "$sm_path" )
 
