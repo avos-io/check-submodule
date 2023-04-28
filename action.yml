@@ -12,10 +12,10 @@ inputs:
     description: 'The commit id to check'
     required: true
   repo:
-    description: 'The repo we\'re running in'
+    description: 'The repo we''re running in'
     required: true
   pr-number:
-    description: 'The pull request id we\'re checking'
+    description: 'The pull request id we''re checking'
     required: true
 runs:
   using: 'docker'
